@@ -1,0 +1,25 @@
+{
+  "name": "passport-linkedin-oauth2",
+  "version": "1.0.0",
+  "description": "Passport for LinkedIn Oauth2",
+  "main": "./lib",
+  "scripts": {
+    "test": "mocha -t 10000 --require should"
+  },
+  "repository": "https://github.com/auth0/passport-linkedin-oauth2",
+  "devDependencies": {
+    "mocha": "*",
+    "should": "~1.2.1",
+    "lodash": "~1.0.0-rc.3"
+  },
+  "keywords": [
+    "passport",
+    "linkedin",
+    "auth0"
+  ],
+  "author": "Eugenio Pace",
+  "license": "MIT",
+  "dependencies": {
+    "passport-oauth": "~0.1.14"
+  }
+}
