@@ -4,6 +4,9 @@
   "description": "Passport for LinkedIn Oauth2",
   "main": "./lib",
   "repository": "https://github.com/auth0/passport-linkedin-oauth2",
+  "scripts": {
+    "test": "mocha --require should -t 5000"
+  },
   "devDependencies": {
     "mocha": "*",
     "should": "~1.2.1",
