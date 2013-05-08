@@ -17,7 +17,13 @@
     "linkedin",
     "auth0"
   ],
-  "author": "Eugenio Pace",
+  "author": "Auth0",
+  "contributors": [
+    {
+      "name": "Eugenio Pace",
+      "email": "eugenio.pace@qraftlabs.com"
+    }
+  ],
   "license": "MIT",
   "dependencies": {
     "passport-oauth": "~0.1.14"
