@@ -9,6 +9,8 @@ A simple [Passport](http://passportjs.org/) strategy for LinkedIn OAuth2.
 Register the strategy
 
 ~~~javascript
+var LinkedInStrategy = require('passport-linkedin-oauth2').Strategy;
+
 passport.use(new LinkedInStrategy({
     	clientID: LINKEDIN_KEY,
     	clientSecret: LINKEDIN_SECRET,
@@ -39,6 +41,15 @@ app.get('/auth/linkedin',
 		    // function will not be called.
 		  });
 
+~~~
+
+the login callback:
+
+~~~javascript
+app.get('/auth/linkedin/callback', passport.authenticate('linkedin', { 
+   successRedirect: '/',
+   failureRedirect: '/login' 
+}));
 ~~~
 
 See [this](http://developer.linkedin.com/) for details on LinkedIn API.
