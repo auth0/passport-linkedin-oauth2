@@ -26,6 +26,7 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "passport-oauth": "~0.1.14"
+    "passport-oauth": "~0.1.14",
+    "underscore": "~1.5.2"
   }
 }
