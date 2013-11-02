@@ -1,6 +1,6 @@
 {
   "name": "passport-linkedin-oauth2",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Passport for LinkedIn Oauth2",
   "main": "./lib",
   "repository": "https://github.com/auth0/passport-linkedin-oauth2",
@@ -30,7 +30,7 @@
       "email": "jschell12@gmail.com"
     },
     {
-      "name":  "Jose Romaniello",
+      "name": "Jose Romaniello",
       "email": "jfromaniello@gmail.com"
     }
   ],
