@@ -10,7 +10,10 @@
   "devDependencies": {
     "mocha": "*",
     "should": "~1.2.1",
-    "lodash": "~1.0.0-rc.3"
+    "lodash": "~1.0.0-rc.3",
+    "passport": "~0.1.17",
+    "express": "~3.4.4",
+    "ejs": "~0.8.4"
   },
   "keywords": [
     "passport",
