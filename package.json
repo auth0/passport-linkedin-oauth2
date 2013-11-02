@@ -10,7 +10,6 @@
   "devDependencies": {
     "mocha": "*",
     "should": "~1.2.1",
-    "lodash": "~1.0.0-rc.3",
     "passport": "~0.1.17",
     "express": "~3.4.4",
     "ejs": "~0.8.4"
@@ -25,6 +24,14 @@
     {
       "name": "Eugenio Pace",
       "email": "eugenio.pace@qraftlabs.com"
+    },
+    {
+      "name": "Joshua Schell",
+      "email": "jschell12@gmail.com"
+    },
+    {
+      "name":  "Jose Romaniello",
+      "email": "jfromaniello@gmail.com"
     }
   ],
   "license": "MIT",
