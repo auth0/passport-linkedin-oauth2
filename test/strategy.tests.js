@@ -176,8 +176,8 @@ describe.only('LinkedIn Strategy', function () {
           'site-standard-profile-request,'+
           'api-standard-profile-request:(headers,url),'+
           'public-profile-url,'+
-          'last-modified-timstamp,'+
-          'first-proposal-comments,'+
+          'last-modified-timestamp,'+
+          'proposal-comments,'+
           'associations,'+
           'interests,'+ 
           'publications,'+
@@ -197,7 +197,7 @@ describe.only('LinkedIn Strategy', function () {
           'job-bookmarks,'+
           'suggestions,'+
           'date-of-birth,'+
-          'member-url-resources:(name, url),'+
+          'member-url-resources:(name,url),'+
           'related-profile-views,'+
           'honors-awards)');
          done();
