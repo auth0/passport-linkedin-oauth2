@@ -1,6 +1,6 @@
 {
   "name": "passport-linkedin-oauth2",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "Passport for LinkedIn Oauth2",
   "main": "./lib",
   "repository": "https://github.com/auth0/passport-linkedin-oauth2",
@@ -32,11 +32,15 @@
     {
       "name": "Jose Romaniello",
       "email": "jfromaniello@gmail.com"
+    },
+    {
+      "name": "Tom Spencer",
+      "email": "fiznool@gmail.com"
     }
   ],
   "license": "MIT",
   "dependencies": {
-    "passport-oauth": "~0.1.14",
-    "underscore": "~1.5.2"
+    "passport-oauth2": "^1.1.2",
+    "underscore": "^1.7.0"
   }
 }
