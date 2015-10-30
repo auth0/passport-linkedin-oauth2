@@ -17,6 +17,7 @@ describe.only('LinkedIn Strategy', function () {
         'first-name,'+ 
         'last-name,'+ 
         'picture-url,'+ 
+        'picture-urls::(original),'+
         'formatted-name,'+
         'maiden-name,'+
         'phonetic-first-name,'+
@@ -53,6 +54,7 @@ describe.only('LinkedIn Strategy', function () {
       'first-name,'+ 
       'last-name,'+ 
       'picture-url,'+ 
+      'picture-urls::(original),'+
       'formatted-name,'+
       'maiden-name,'+
       'phonetic-first-name,'+
@@ -91,6 +93,7 @@ describe.only('LinkedIn Strategy', function () {
       'first-name,'+ 
       'last-name,'+ 
       'picture-url,'+ 
+      'picture-urls::(original),'+
       'formatted-name,'+
       'maiden-name,'+
       'phonetic-first-name,'+
@@ -157,6 +160,7 @@ describe.only('LinkedIn Strategy', function () {
           'first-name,'+ 
           'last-name,'+ 
           'picture-url,'+ 
+          'picture-urls::(original),'+
           'formatted-name,'+
           'maiden-name,'+
           'phonetic-first-name,'+
