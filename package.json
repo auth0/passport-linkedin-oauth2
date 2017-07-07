@@ -3,6 +3,7 @@
   "version": "1.5.0",
   "description": "Passport for LinkedIn Oauth2",
   "main": "./lib",
+  "typings": "/lib/index",
   "repository": "https://github.com/auth0/passport-linkedin-oauth2",
   "scripts": {
     "test": "mocha --require should -t 5000"
