@@ -40,6 +40,7 @@
   ],
   "license": "MIT",
   "dependencies": {
+    "express-session": "^1.15.3",
     "passport-oauth2": "1.x.x",
     "underscore": "^1.7.0"
   }
