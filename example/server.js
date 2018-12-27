@@ -33,7 +33,7 @@ passport.use(new LinkedinStrategy({
     clientID:     LINKEDIN_CLIENT_ID,
     clientSecret: LINKEDIN_CLIENT_SECRET,
     callbackURL:  CALLBACK_URL,
-    scope:        [ 'r_basicprofile', 'r_emailaddress'],
+    scope:        ['r_liteprofile', 'r_emailaddress'],
     passReqToCallback: true
   },
   function(req, accessToken, refreshToken, profile, done) {

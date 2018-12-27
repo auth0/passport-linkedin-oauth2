@@ -8,11 +8,12 @@
     "test": "mocha --require should -t 5000"
   },
   "devDependencies": {
-    "mocha": "*",
-    "should": "~1.2.1",
-    "passport": "~0.1.17",
+    "ejs": "~0.8.4",
     "express": "~3.4.4",
-    "ejs": "~0.8.4"
+    "mocha": "*",
+    "nock": "^10.0.5",
+    "passport": "~0.1.17",
+    "should": "~1.2.1"
   },
   "keywords": [
     "passport",
