@@ -62,7 +62,7 @@ describe('LinkedIn Strategy', function () {
         var options = {
           clientID: "clientId",
           clientSecret: "clientSecret",
-          scope: ['r_lite_profile', 'r_emailaddress']
+          scope: ['r_liteprofile', 'r_emailaddress']
         };
 
         var st = new Strategy(options, function () { });
@@ -91,7 +91,7 @@ describe('LinkedIn Strategy', function () {
         var options = {
           clientID: "clientId",
           clientSecret: "clientSecret",
-          scope: ['r_lite_profile', 'r_emailaddress']
+          scope: ['r_liteprofile', 'r_emailaddress']
         };
 
         var st = new Strategy(options, function () { });
