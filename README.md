@@ -1,4 +1,4 @@
-A simple [Passport](http://passportjs.org/) strategy for LinkedIn OAuth2.
+A simple [Passport](http://passportjs.org/) strategy for LinkedIn OAuth2 that works with lite profile.
 
 ## Install
 
