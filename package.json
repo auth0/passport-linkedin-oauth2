@@ -1,9 +1,12 @@
 {
-  "name": "passport-linkedin-oauth2",
-  "version": "1.5.0",
-  "description": "Passport for LinkedIn Oauth2",
+  "name": "@sokratis/passport-linkedin-oauth2",
+  "version": "2.0.0",
+  "description": "Passport for new LinkedIn Oauth2 (works with lite profile)",
   "main": "./lib",
-  "repository": "https://github.com/auth0/passport-linkedin-oauth2",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sokratisvidros/passport-linkedin-oauth2.git"
+  },
   "scripts": {
     "test": "mocha --require should -t 5000"
   },
@@ -23,30 +26,24 @@
   ],
   "author": "Auth0",
   "contributors": [
-    {
-      "name": "Eugenio Pace",
-      "email": "eugenio.pace@qraftlabs.com"
-    },
-    {
-      "name": "Joshua Schell",
-      "email": "jschell12@gmail.com"
-    },
-    {
-      "name": "Jose Romaniello",
-      "email": "jfromaniello@gmail.com"
-    },
-    {
-      "name": "Tom Spencer",
-      "email": "fiznool@gmail.com"
-    },
-    {
-      "name": "Sokratis Vidros",
-      "email": "sokratis.vidros@gmail.com"
-    }
+    "Eugenio Pace <eugenio.pace@qraftlabs.com>",
+    "Joshua Schell <jschell12@gmail.com>",
+    "Jose Romaniello <jfromaniello@gmail.com>",
+    "Tom Spencer <fiznool@gmail.com>",
+    "Sokratis Vidros <sokratis.vidros@gmail.com>"
   ],
   "license": "MIT",
   "dependencies": {
     "passport-oauth2": "1.x.x",
     "underscore": "^1.7.0"
+  },
+  "bugs": {
+    "url": "https://github.com/sokratisvidros/passport-linkedin-oauth2/issues"
+  },
+  "homepage": "https://github.com/sokratisvidros/passport-linkedin-oauth2#readme",
+  "directories": {
+    "example": "example",
+    "lib": "lib",
+    "test": "test"
   }
 }
