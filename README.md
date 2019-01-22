@@ -2,14 +2,14 @@ A simple [Passport](http://passportjs.org/) strategy for LinkedIn OAuth2 that wo
 
 ## Install
 
-  npm install passport-linkedin-oauth2
+  npm install @sokratis/passport-linkedin-oauth2
 
 ## Usage
 
 Register the strategy
 
 ~~~javascript
-var LinkedInStrategy = require('passport-linkedin-oauth2').Strategy;
+var LinkedInStrategy = require('@sokratis/passport-linkedin-oauth2').Strategy;
 
 passport.use(new LinkedInStrategy({
   clientID: LINKEDIN_KEY,
