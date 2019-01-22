@@ -1,11 +1,12 @@
 var assert = require("assert");
 var should = require("should");
+var sinon = require("sinon");
 var Strategy = require('../lib/index').OAuth2Strategy;
 
 describe.only('LinkedIn Strategy', function () {
 
   it('init with basic profile', function (done) {
-      
+
     var options = {
         clientID: "clientId",
         clientSecret: "clientSecret"
@@ -13,10 +14,10 @@ describe.only('LinkedIn Strategy', function () {
 
     var st = new Strategy(options, function(){});
     st.name.should.eql("linkedin");
-    st.profileUrl.should.eql('https://api.linkedin.com/v1/people/~:(id,'+ 
-        'first-name,'+ 
-        'last-name,'+ 
-        'picture-url,'+ 
+    st.profileUrl.should.eql('https://api.linkedin.com/v1/people/~:(id,'+
+        'first-name,'+
+        'last-name,'+
+        'picture-url,'+
         'picture-urls::(original),'+
         'formatted-name,'+
         'maiden-name,'+
@@ -39,9 +40,9 @@ describe.only('LinkedIn Strategy', function () {
         'public-profile-url)');
         done();
     });
-  
+
   it('init with email scope', function (done) {
-      
+
     var options = {
         clientID: "clientId",
         clientSecret: "clientSecret",
@@ -50,10 +51,10 @@ describe.only('LinkedIn Strategy', function () {
 
     var st = new Strategy(options, function(){});
     st.name.should.eql("linkedin");
-    st.profileUrl.should.eql('https://api.linkedin.com/v1/people/~:(id,'+ 
-      'first-name,'+ 
-      'last-name,'+ 
-      'picture-url,'+ 
+    st.profileUrl.should.eql('https://api.linkedin.com/v1/people/~:(id,'+
+      'first-name,'+
+      'last-name,'+
+      'picture-url,'+
       'picture-urls::(original),'+
       'formatted-name,'+
       'maiden-name,'+
@@ -80,7 +81,7 @@ describe.only('LinkedIn Strategy', function () {
 
 
   it('init with profile and email scope', function (done) {
-      
+
     var options = {
         clientID: "clientId",
         clientSecret: "clientSecret",
@@ -89,10 +90,10 @@ describe.only('LinkedIn Strategy', function () {
 
     var st = new Strategy(options, function(){});
     st.name.should.eql("linkedin");
-     st.profileUrl.should.eql('https://api.linkedin.com/v1/people/~:(id,'+ 
-      'first-name,'+ 
-      'last-name,'+ 
-      'picture-url,'+ 
+     st.profileUrl.should.eql('https://api.linkedin.com/v1/people/~:(id,'+
+      'first-name,'+
+      'last-name,'+
+      'picture-url,'+
       'picture-urls::(original),'+
       'formatted-name,'+
       'maiden-name,'+
@@ -118,7 +119,7 @@ describe.only('LinkedIn Strategy', function () {
 
 
     it('init with custom parameters', function (done) {
-      
+
         var options = {
             clientID: "clientId",
             clientSecret: "clientSecret",
@@ -132,7 +133,7 @@ describe.only('LinkedIn Strategy', function () {
     });
 
 
-    it('init with r_emailaddress scope', function (done) {      
+    it('init with r_emailaddress scope', function (done) {
         var options = {
             clientID: "clientId",
             clientSecret: "clientSecret",
@@ -147,7 +148,7 @@ describe.only('LinkedIn Strategy', function () {
     });
 
 
-    it('test all fields with r_basicprofile and r_fullprofile', function (done) {      
+    it('test all fields with r_basicprofile and r_fullprofile', function (done) {
         var options = {
             clientID: "clientId",
             clientSecret: "clientSecret",
@@ -156,10 +157,10 @@ describe.only('LinkedIn Strategy', function () {
 
         var st = new Strategy(options, function(){});
         st.name.should.eql("linkedin");
-        st.profileUrl.should.eql('https://api.linkedin.com/v1/people/~:(id,'+ 
-          'first-name,'+ 
-          'last-name,'+ 
-          'picture-url,'+ 
+        st.profileUrl.should.eql('https://api.linkedin.com/v1/people/~:(id,'+
+          'first-name,'+
+          'last-name,'+
+          'picture-url,'+
           'picture-urls::(original),'+
           'formatted-name,'+
           'maiden-name,'+
@@ -183,7 +184,7 @@ describe.only('LinkedIn Strategy', function () {
           'last-modified-timestamp,'+
           'proposal-comments,'+
           'associations,'+
-          'interests,'+ 
+          'interests,'+
           'publications,'+
           'patents,'+
           'languages,'+
@@ -206,4 +207,162 @@ describe.only('LinkedIn Strategy', function () {
           'honors-awards)');
          done();
     });
+
+  describe('user profile', function() {
+    const testProfile = {
+      id: 'test',
+      formattedName: 'formatted test name',
+      lastName: 'lastname',
+      firstName: 'firstname',
+      emailAddress: 'test@test.com',
+      pictureUrl: 'https://some.url.com/picture.jpg'
+    };
+
+    const jsonBody = JSON.stringify(testProfile);
+
+    function createStrategy(extraOptions) {
+      const result = {};
+
+      const options = Object.assign({
+        clientID: "clientId",
+        clientSecret: "clientSecret"
+      }, extraOptions);
+
+      result.strategy = new Strategy(options, () => {});
+      result.getStub = sinon.stub(result.strategy._oauth2, 'get');
+
+      return result;
+    }
+
+    it('gets a user profile', function(done) {
+      const { strategy, getStub } = createStrategy();
+
+      getStub.callsArgWith(2, null, jsonBody);
+
+      strategy.userProfile('token', (err, profile) => {
+        should.not.exist(err);
+        should.exist(profile);
+        profile.id.should.equal(testProfile.id);
+        profile.displayName.should.equal(testProfile.formattedName);
+        profile.name.familyName.should.equal(testProfile.lastName);
+        profile.name.givenName.should.equal(testProfile.firstName);
+        profile.emails.should.be.an.Array().of.length(1);
+        profile.emails[0].value.should.equal(testProfile.emailAddress);
+        profile.photos.should.be.an.Array().of.length(1);
+        profile.photos[0].value.should.equal(testProfile.pictureUrl);
+        getStub.calledOnce.should.be.true();
+
+        done();
+      });
+    });
+
+    it('gets a user profile with missing fields', function(done) {
+      const { strategy, getStub } = createStrategy();
+
+      const newTestProfile = Object.assign({}, testProfile);
+      delete newTestProfile.formattedName;
+
+      getStub.callsArgWith(2, null, JSON.stringify(newTestProfile));
+
+      strategy.userProfile('token', (err, profile) => {
+        should.not.exist(err);
+        should.exist(profile);
+        profile.id.should.equal(testProfile.id);
+        should.not.exist(profile.displayName);
+        profile.name.familyName.should.equal(testProfile.lastName);
+        profile.name.givenName.should.equal(testProfile.firstName);
+        profile.emails.should.be.an.Array().of.length(1);
+        profile.emails[0].value.should.equal(testProfile.emailAddress);
+        profile.photos.should.be.an.Array().of.length(1);
+        profile.photos[0].value.should.equal(testProfile.pictureUrl);
+        getStub.calledOnce.should.be.true();
+
+        done();
+      });
+    });
+
+    it('fails when user profile URL response body is not JSON', function(done) {
+      const { strategy, getStub } = createStrategy();
+
+      getStub.callsArgWith(2, null, 'not json');
+
+      strategy.userProfile('token', (err, profile) => {
+        should.exist(err);
+        err.should.be.an.Error();
+        should.not.exist(profile);
+        getStub.calledOnce.should.be.true();
+
+        done();
+      });
+    });
+
+    it('fails to get profile once when public profile URL fails with no public-profile-url field', function(done) {
+      const { strategy, getStub } = createStrategy({ scope: 'r_emailaddress' });
+
+      getStub.callsArgWith(2, new Error('test'));
+
+      strategy.userProfile('token', (err, profile) => {
+        should.exist(err);
+        err.should.be.an.Error().with.property('message', 'failed to fetch user profile');
+        getStub.calledOnce.should.be.true();
+        getStub.firstCall.args[0].should.not.match(/public-profile-url/);
+
+        done();
+      });
+    });
+
+    it('fails to get profile twice when public profile URL fails with public-profile-url field', function(done) {
+      const { strategy, getStub } = createStrategy();
+
+      getStub.callsArgWith(2, new Error('test'));
+
+      strategy.userProfile('token', (err, profile) => {
+        should.exist(err);
+        err.should.be.an.Error().with.property('message', 'failed to fetch user profile');
+        getStub.calledTwice.should.be.true();
+
+        const firstUrl = getStub.firstCall.args[0];
+        const secondUrl = getStub.secondCall.args[0];
+
+        firstUrl.should.match(/public-profile-url/);
+        secondUrl.should.not.match(/public-profile-url/);
+
+        let url = firstUrl.replace('public-profile-url', '');
+        url = url.replace(',)', ')');
+        url = url.replace('(,', '(');
+        url = url.replace(',,', ',');
+        url.should.equal(secondUrl);
+
+        done();
+      });
+    });
+
+    it('gets profile correctly after first failure with public-profile-url field', function(done) {
+      const { strategy, getStub } = createStrategy();
+
+      getStub.onFirstCall().callsArgWith(2, new Error('test'));
+      getStub.onSecondCall().callsArgWith(2, null, jsonBody);
+
+      strategy.userProfile('token', (err, profile) => {
+        should.not.exist(err);
+        should.exist(profile);
+
+        getStub.calledTwice.should.be.true();
+        getStub.firstCall.args[0].should.match(/public-profile-url/);
+        getStub.secondCall.args[0].should.not.match(/public-profile-url/);
+
+        profile.id.should.equal(testProfile.id);
+        profile.displayName.should.equal(testProfile.formattedName);
+        profile.name.familyName.should.equal(testProfile.lastName);
+        profile.name.givenName.should.equal(testProfile.firstName);
+        profile.emails.should.be.an.Array().of.length(1);
+        profile.emails[0].value.should.equal(testProfile.emailAddress);
+        profile.photos.should.be.an.Array().of.length(1);
+        profile.photos[0].value.should.equal(testProfile.pictureUrl);
+
+        done();
+      });
+    });
+
+  });
 });

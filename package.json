@@ -1,6 +1,6 @@
 {
   "name": "passport-linkedin-oauth2",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "Passport for LinkedIn Oauth2",
   "main": "./lib",
   "repository": "https://github.com/auth0/passport-linkedin-oauth2",
@@ -8,11 +8,12 @@
     "test": "mocha --require should -t 5000"
   },
   "devDependencies": {
-    "mocha": "*",
-    "should": "~1.2.1",
-    "passport": "~0.1.17",
+    "ejs": "~0.8.4",
     "express": "~3.4.4",
-    "ejs": "~0.8.4"
+    "mocha": "*",
+    "passport": "~0.1.17",
+    "should": "^13.2.0",
+    "sinon": "^7.2.2"
   },
   "keywords": [
     "passport",
