@@ -43,9 +43,9 @@ describe('LinkedIn Strategy', function () {
           profile.name.givenName.should.eql('Tina');
           profile.name.familyName.should.eql('Belcher');
           profile.displayName.should.eql('Tina Belcher');
-          profile.photos.should.eql([
-            'https://media.licdn.com/dms/image/C4D03AQGsitRwG8U8ZQ/profile-displayphoto-shrink_100_100/0?e=1526940000&v=alpha&t=12345'
-          ]);
+          profile.photos.should.eql([{
+            value: 'https://media.licdn.com/dms/image/C4D03AQGsitRwG8U8ZQ/profile-displayphoto-shrink_100_100/0?e=1526940000&v=alpha&t=12345'
+          }]);
           done();
         });
       });
