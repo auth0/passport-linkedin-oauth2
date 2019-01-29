@@ -1,368 +1,107 @@
 var assert = require("assert");
 var should = require("should");
-var sinon = require("sinon");
+var nock = require('nock');
 var Strategy = require('../lib/index').OAuth2Strategy;
 
-describe.only('LinkedIn Strategy', function () {
+nock.disableNetConnect();
 
-  it('init with basic profile', function (done) {
-
+describe('LinkedIn Strategy', function () {
+  it('sanity check', function (done) {
     var options = {
-        clientID: "clientId",
-        clientSecret: "clientSecret"
-      };
-
-    var st = new Strategy(options, function(){});
-    st.name.should.eql("linkedin");
-    st.profileUrl.should.eql('https://api.linkedin.com/v1/people/~:(id,'+
-        'first-name,'+
-        'last-name,'+
-        'picture-url,'+
-        'picture-urls::(original),'+
-        'formatted-name,'+
-        'maiden-name,'+
-        'phonetic-first-name,'+
-        'phonetic-last-name,'+
-        'formatted-phonetic-name,'+
-        'headline,'+
-        'location:(name,country:(code)),'+
-        'industry,'+
-        'distance,'+
-        'relation-to-viewer:(distance,connections),'+
-        'current-share,'+
-        'num-connections,'+
-        'num-connections-capped,'+
-        'summary,'+
-        'specialties,'+
-        'positions,'+
-        'site-standard-profile-request,'+
-        'api-standard-profile-request:(headers,url),'+
-        'public-profile-url)');
-        done();
-    });
-
-  it('init with email scope', function (done) {
-
-    var options = {
-        clientID: "clientId",
-        clientSecret: "clientSecret",
-        scope: ['r_emailaddress']
+      clientID: "clientId",
+      clientSecret: "clientSecret"
     };
+    var st = new Strategy(options, function () { });
 
-    var st = new Strategy(options, function(){});
     st.name.should.eql("linkedin");
-    st.profileUrl.should.eql('https://api.linkedin.com/v1/people/~:(id,'+
-      'first-name,'+
-      'last-name,'+
-      'picture-url,'+
-      'picture-urls::(original),'+
-      'formatted-name,'+
-      'maiden-name,'+
-      'phonetic-first-name,'+
-      'phonetic-last-name,'+
-      'formatted-phonetic-name,'+
-      'headline,'+
-      'location:(name,country:(code)),'+
-      'industry,'+
-      'distance,'+
-      'relation-to-viewer:(distance,connections),'+
-      'current-share,'+
-      'num-connections,'+
-      'num-connections-capped,'+
-      'summary,'+
-      'specialties,'+
-      'positions,'+
-      'site-standard-profile-request,'+
-      'api-standard-profile-request:(headers,url),'+
-      'public-profile-url,'+
-      'email-address)');
-        done();
+    st.profileUrl.should.eql('https://api.linkedin.com/v2/me?projection=(id,firstName,lastName,profilePicture(displayImage~:playableStreams))');
+    st.emailUrl.should.eql('https://api.linkedin.com/v2/emailAddress?q=members&projection=(elements*(handle~))');
+
+    done();
+  });
+
+  describe('userProfile(accessToken, done)', function () {
+    before(function () {
+      nock('https://api.linkedin.com')
+        .get('/v2/me?projection=(id%2CfirstName%2ClastName%2CprofilePicture(displayImage~%3AplayableStreams))&oauth2_access_token=whatever')
+        .times(2)
+        .reply(200, require('./lite-profile.json'));
     });
 
-
-  it('init with profile and email scope', function (done) {
-
-    var options = {
-        clientID: "clientId",
-        clientSecret: "clientSecret",
-        scope: ['r_basicprofile', 'r_emailaddress']
-      };
-
-    var st = new Strategy(options, function(){});
-    st.name.should.eql("linkedin");
-     st.profileUrl.should.eql('https://api.linkedin.com/v1/people/~:(id,'+
-      'first-name,'+
-      'last-name,'+
-      'picture-url,'+
-      'picture-urls::(original),'+
-      'formatted-name,'+
-      'maiden-name,'+
-      'phonetic-first-name,'+
-      'phonetic-last-name,'+
-      'formatted-phonetic-name,'+
-      'headline,'+
-      'location:(name,country:(code)),'+
-      'industry,'+
-      'distance,'+
-      'relation-to-viewer:(distance,connections),'+
-      'current-share,'+
-      'num-connections,'+
-      'num-connections-capped,'+
-      'summary,'+
-      'specialties,'+
-      'positions,'+
-      'site-standard-profile-request,'+
-      'api-standard-profile-request:(headers,url),'+
-      'public-profile-url,email-address)');
-     done();
-    });
-
-
-    it('init with custom parameters', function (done) {
-
+    context('with r_liteprofile scope', function () {
+      it('passes id, firstname, lastname and profile picture fields to callback', function (done) {
         var options = {
-            clientID: "clientId",
-            clientSecret: "clientSecret",
-            profileFields: [ 'id', 'first-name', 'last-name']
-          };
+          clientID: "clientId",
+          clientSecret: "clientSecret"
+        };
 
-        var st = new Strategy(options, function(){});
-        st.name.should.eql("linkedin");
-        st.profileUrl.should.eql('https://api.linkedin.com/v1/people/~:(id,first-name,last-name)');
-        done();
+        var st = new Strategy(options, function () { });
+
+        st.userProfile('whatever', function (err, profile) {
+          should.not.exist(err);
+          profile.id.should.eql('REDACTED');
+          profile.name.givenName.should.eql('Tina');
+          profile.name.familyName.should.eql('Belcher');
+          profile.displayName.should.eql('Tina Belcher');
+          profile.photos.should.eql([{
+            value: 'https://media.licdn.com/dms/image/C4D03AQGsitRwG8U8ZQ/profile-displayphoto-shrink_100_100/0?e=1526940000&v=alpha&t=12345'
+          }]);
+          done();
+        });
+      });
     });
 
+    context('with r_emailaddress scope', function () {
+      before(function () {
+        nock('https://api.linkedin.com')
+          .get('/v2/emailAddress?q=members&projection=(elements*(handle~))&oauth2_access_token=whatever')
+          .reply(200, require('./email-address.json'))
+      });
 
-    it('init with r_emailaddress scope', function (done) {
+      it('passes also email field to callback', function (done) {
         var options = {
-            clientID: "clientId",
-            clientSecret: "clientSecret",
-            scope: ['r_emailaddress'],
-            profileFields: [ 'id', 'first-name', 'last-name']
-          };
+          clientID: "clientId",
+          clientSecret: "clientSecret",
+          scope: ['r_liteprofile', 'r_emailaddress']
+        };
 
-        var st = new Strategy(options, function(){});
-        st.name.should.eql("linkedin");
-        st.profileUrl.should.eql('https://api.linkedin.com/v1/people/~:(id,first-name,last-name)');
-        done();
+        var st = new Strategy(options, function () { });
+
+        st.userProfile('whatever', function (err, profile) {
+          should.not.exist(err);
+          profile.id.should.eql('REDACTED');
+          profile.emails.should.eql([
+            {
+              value: 'hsimpson@linkedin.com'
+            }
+          ]);
+          done();
+        });
+      });
     });
 
+    context('when error occurs', function () {
+      before(function () {
+        nock('https://api.linkedin.com')
+          .get('/v2/.*')
+          .reply(500)
+      });
 
-    it('test all fields with r_basicprofile and r_fullprofile', function (done) {
+      it('passes error to callback', function (done) {
         var options = {
-            clientID: "clientId",
-            clientSecret: "clientSecret",
-            scope: ['r_fullprofile']
-          };
+          clientID: "clientId",
+          clientSecret: "clientSecret",
+          scope: ['r_liteprofile', 'r_emailaddress']
+        };
 
-        var st = new Strategy(options, function(){});
-        st.name.should.eql("linkedin");
-        st.profileUrl.should.eql('https://api.linkedin.com/v1/people/~:(id,'+
-          'first-name,'+
-          'last-name,'+
-          'picture-url,'+
-          'picture-urls::(original),'+
-          'formatted-name,'+
-          'maiden-name,'+
-          'phonetic-first-name,'+
-          'phonetic-last-name,'+
-          'formatted-phonetic-name,'+
-          'headline,'+
-          'location:(name,country:(code)),'+
-          'industry,'+
-          'distance,'+
-          'relation-to-viewer:(distance,connections),'+
-          'current-share,'+
-          'num-connections,'+
-          'num-connections-capped,'+
-          'summary,'+
-          'specialties,'+
-          'positions,'+
-          'site-standard-profile-request,'+
-          'api-standard-profile-request:(headers,url),'+
-          'public-profile-url,'+
-          'last-modified-timestamp,'+
-          'proposal-comments,'+
-          'associations,'+
-          'interests,'+
-          'publications,'+
-          'patents,'+
-          'languages,'+
-          'skills,'+
-          'certifications,'+
-          'educations,'+
-          'courses,'+
-          'volunteer,'+
-          'three-current-positions,'+
-          'three-past-positions,'+
-          'num-recommenders,'+
-          'recommendations-received,'+
-          'mfeed-rss-url,'+
-          'following,'+
-          'job-bookmarks,'+
-          'suggestions,'+
-          'date-of-birth,'+
-          'member-url-resources:(name,url),'+
-          'related-profile-views,'+
-          'honors-awards)');
-         done();
-    });
+        var st = new Strategy(options, function () { });
 
-  describe('user profile', function() {
-    const testProfile = {
-      id: 'test',
-      formattedName: 'formatted test name',
-      lastName: 'lastname',
-      firstName: 'firstname',
-      emailAddress: 'test@test.com',
-      pictureUrl: 'https://some.url.com/picture.jpg'
-    };
-
-    const jsonBody = JSON.stringify(testProfile);
-
-    function createStrategy(extraOptions) {
-      const result = {};
-
-      const options = Object.assign({
-        clientID: "clientId",
-        clientSecret: "clientSecret"
-      }, extraOptions);
-
-      result.strategy = new Strategy(options, () => {});
-      result.getStub = sinon.stub(result.strategy._oauth2, 'get');
-
-      return result;
-    }
-
-    it('gets a user profile', function(done) {
-      const { strategy, getStub } = createStrategy();
-
-      getStub.callsArgWith(2, null, jsonBody);
-
-      strategy.userProfile('token', (err, profile) => {
-        should.not.exist(err);
-        should.exist(profile);
-        profile.id.should.equal(testProfile.id);
-        profile.displayName.should.equal(testProfile.formattedName);
-        profile.name.familyName.should.equal(testProfile.lastName);
-        profile.name.givenName.should.equal(testProfile.firstName);
-        profile.emails.should.be.an.Array().of.length(1);
-        profile.emails[0].value.should.equal(testProfile.emailAddress);
-        profile.photos.should.be.an.Array().of.length(1);
-        profile.photos[0].value.should.equal(testProfile.pictureUrl);
-        getStub.calledOnce.should.be.true();
-
-        done();
+        st.userProfile('whatever', function (err, profile) {
+          should.exist(err);
+          should.not.exist(profile);
+          done();
+        });
       });
     });
-
-    it('gets a user profile with missing fields', function(done) {
-      const { strategy, getStub } = createStrategy();
-
-      const newTestProfile = Object.assign({}, testProfile);
-      delete newTestProfile.formattedName;
-
-      getStub.callsArgWith(2, null, JSON.stringify(newTestProfile));
-
-      strategy.userProfile('token', (err, profile) => {
-        should.not.exist(err);
-        should.exist(profile);
-        profile.id.should.equal(testProfile.id);
-        should.not.exist(profile.displayName);
-        profile.name.familyName.should.equal(testProfile.lastName);
-        profile.name.givenName.should.equal(testProfile.firstName);
-        profile.emails.should.be.an.Array().of.length(1);
-        profile.emails[0].value.should.equal(testProfile.emailAddress);
-        profile.photos.should.be.an.Array().of.length(1);
-        profile.photos[0].value.should.equal(testProfile.pictureUrl);
-        getStub.calledOnce.should.be.true();
-
-        done();
-      });
-    });
-
-    it('fails when user profile URL response body is not JSON', function(done) {
-      const { strategy, getStub } = createStrategy();
-
-      getStub.callsArgWith(2, null, 'not json');
-
-      strategy.userProfile('token', (err, profile) => {
-        should.exist(err);
-        err.should.be.an.Error();
-        should.not.exist(profile);
-        getStub.calledOnce.should.be.true();
-
-        done();
-      });
-    });
-
-    it('fails to get profile once when public profile URL fails with no public-profile-url field', function(done) {
-      const { strategy, getStub } = createStrategy({ scope: 'r_emailaddress' });
-
-      getStub.callsArgWith(2, new Error('test'));
-
-      strategy.userProfile('token', (err, profile) => {
-        should.exist(err);
-        err.should.be.an.Error().with.property('message', 'failed to fetch user profile');
-        getStub.calledOnce.should.be.true();
-        getStub.firstCall.args[0].should.not.match(/public-profile-url/);
-
-        done();
-      });
-    });
-
-    it('fails to get profile twice when public profile URL fails with public-profile-url field', function(done) {
-      const { strategy, getStub } = createStrategy();
-
-      getStub.callsArgWith(2, new Error('test'));
-
-      strategy.userProfile('token', (err, profile) => {
-        should.exist(err);
-        err.should.be.an.Error().with.property('message', 'failed to fetch user profile');
-        getStub.calledTwice.should.be.true();
-
-        const firstUrl = getStub.firstCall.args[0];
-        const secondUrl = getStub.secondCall.args[0];
-
-        firstUrl.should.match(/public-profile-url/);
-        secondUrl.should.not.match(/public-profile-url/);
-
-        let url = firstUrl.replace('public-profile-url', '');
-        url = url.replace(',)', ')');
-        url = url.replace('(,', '(');
-        url = url.replace(',,', ',');
-        url.should.equal(secondUrl);
-
-        done();
-      });
-    });
-
-    it('gets profile correctly after first failure with public-profile-url field', function(done) {
-      const { strategy, getStub } = createStrategy();
-
-      getStub.onFirstCall().callsArgWith(2, new Error('test'));
-      getStub.onSecondCall().callsArgWith(2, null, jsonBody);
-
-      strategy.userProfile('token', (err, profile) => {
-        should.not.exist(err);
-        should.exist(profile);
-
-        getStub.calledTwice.should.be.true();
-        getStub.firstCall.args[0].should.match(/public-profile-url/);
-        getStub.secondCall.args[0].should.not.match(/public-profile-url/);
-
-        profile.id.should.equal(testProfile.id);
-        profile.displayName.should.equal(testProfile.formattedName);
-        profile.name.familyName.should.equal(testProfile.lastName);
-        profile.name.givenName.should.equal(testProfile.firstName);
-        profile.emails.should.be.an.Array().of.length(1);
-        profile.emails[0].value.should.equal(testProfile.emailAddress);
-        profile.photos.should.be.an.Array().of.length(1);
-        profile.photos[0].value.should.equal(testProfile.pictureUrl);
-
-        done();
-      });
-    });
-
   });
 });

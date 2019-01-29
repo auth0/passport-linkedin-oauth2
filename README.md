@@ -1,21 +1,21 @@
-A simple [Passport](http://passportjs.org/) strategy for LinkedIn OAuth2.
+A simple [Passport](http://passportjs.org/) strategy for LinkedIn OAuth2 that works with lite profile.
 
 ## Install
 
-  npm install passport-linkedin-oauth2
+  npm install @sokratis/passport-linkedin-oauth2
 
 ## Usage
 
 Register the strategy
 
 ~~~javascript
-var LinkedInStrategy = require('passport-linkedin-oauth2').Strategy;
+var LinkedInStrategy = require('@sokratis/passport-linkedin-oauth2').Strategy;
 
 passport.use(new LinkedInStrategy({
   clientID: LINKEDIN_KEY,
   clientSecret: LINKEDIN_SECRET,
   callbackURL: "http://127.0.0.1:3000/auth/linkedin/callback",
-  scope: ['r_emailaddress', 'r_basicprofile'],
+  scope: ['r_emailaddress', 'r_liteprofile'],
 }, function(accessToken, refreshToken, profile, done) {
   // asynchronous verification, for effect...
   process.nextTick(function () {
@@ -48,7 +48,7 @@ app.get('/auth/linkedin/callback', passport.authenticate('linkedin', {
 }));
 ~~~
 
-See [this](http://developer.linkedin.com/) for details on LinkedIn API.
+See [this](https://docs.microsoft.com/en-us/linkedin/consumer/integrations/self-serve/sign-in-with-linkedin?context=linkedin/consumer/context?trk=eml_mktg_gco_dev_api_comms) for details on LinkedIn API.
 
 ## Auto-handle `state` param
 
@@ -61,7 +61,7 @@ passport.use(new LinkedInStrategy({
   clientID: LINKEDIN_KEY,
   clientSecret: LINKEDIN_SECRET,
   callbackURL: "http://127.0.0.1:3000/auth/linkedin/callback",
-  scope: ['r_emailaddress', 'r_basicprofile'],
+  scope: ['r_emailaddress', 'r_liteprofile'],
   state: true
 }, function(accessToken, refreshToken, profile, done) {
   // asynchronous verification, for effect...
