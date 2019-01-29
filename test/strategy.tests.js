@@ -364,5 +364,17 @@ describe.only('LinkedIn Strategy', function () {
       });
     });
 
+    // See: https://github.com/auth0/passport-linkedin-oauth2/pull/70
+    it('it calls callback only once when get profile fails the first time', function(done) {
+      const { strategy, getStub } = createStrategy();
+
+      getStub.onFirstCall().callsArgWith(2, new Error('test'));
+      getStub.onSecondCall().callsArgWith(2, null, jsonBody);
+
+      strategy.userProfile('token', (err, profile) => {
+        done();
+      });
+    });
+
   });
 });
