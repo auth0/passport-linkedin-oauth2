@@ -1,4 +1,3 @@
-var assert = require("assert");
 var should = require("should");
 var nock = require('nock');
 var Strategy = require('../lib/index').OAuth2Strategy;
@@ -14,7 +13,7 @@ describe('LinkedIn Strategy', function () {
     var st = new Strategy(options, function () { });
 
     st.name.should.eql("linkedin");
-    st.profileUrl.should.eql('https://api.linkedin.com/v2/me?projection=(id,firstName,lastName,profilePicture(displayImage~:playableStreams))');
+    st.profileUrl.should.eql('https://api.linkedin.com/v2/me?projection=(id,firstName,lastName,maidenName,profilePicture(displayImage~:playableStreams))');
     st.emailUrl.should.eql('https://api.linkedin.com/v2/emailAddress?q=members&projection=(elements*(handle~))');
 
     done();
@@ -23,7 +22,7 @@ describe('LinkedIn Strategy', function () {
   describe('userProfile(accessToken, done)', function () {
     before(function () {
       nock('https://api.linkedin.com')
-        .get('/v2/me?projection=(id%2CfirstName%2ClastName%2CprofilePicture(displayImage~%3AplayableStreams))&oauth2_access_token=whatever')
+        .get('/v2/me?projection=(id%2CfirstName%2ClastName%2CmaidenName%2CprofilePicture(displayImage~%3AplayableStreams))&oauth2_access_token=whatever')
         .times(2)
         .reply(200, require('./lite-profile.json'));
     });

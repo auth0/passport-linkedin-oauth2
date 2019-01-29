@@ -1,11 +1,11 @@
 {
-  "name": "@sokratis/passport-linkedin-oauth2",
+  "name": "passport-linkedin-oauth2",
   "version": "2.0.2",
-  "description": "Passport for new LinkedIn Oauth2 (works with lite profile)",
+  "description": "Passport for LinkedIn OAuth2 API v2",
   "main": "./lib",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sokratisvidros/passport-linkedin-oauth2.git"
+    "url": "https://github.com/auth0/passport-linkedin-oauth2"
   },
   "scripts": {
     "test": "mocha --require should -t 5000"
@@ -34,13 +34,8 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "passport-oauth2": "1.x.x",
-    "underscore": "^1.7.0"
+    "passport-oauth2": "1.x.x"
   },
-  "bugs": {
-    "url": "https://github.com/sokratisvidros/passport-linkedin-oauth2/issues"
-  },
-  "homepage": "https://github.com/sokratisvidros/passport-linkedin-oauth2#readme",
   "directories": {
     "example": "example",
     "lib": "lib",
