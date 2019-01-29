@@ -1,6 +1,7 @@
 var express = require('express')
   , passport = require('passport')
-  , LinkedinStrategy = require('../lib').Strategy;
+  , LinkedinStrategy = require('../lib').Strategy
+  , session = require('express-session');
 
 // API Access link for creating client ID and secret:
 // https://www.linkedin.com/secure/developer
@@ -61,7 +62,7 @@ app.configure(function() {
   app.use(express.cookieParser());
   app.use(express.urlencoded());
   app.use(express.json());
-  app.use(express.session({ secret: 'keyboard cat' }));
+  app.use(session({ secret: 'keyboard cat' }));
   // Initialize Passport!  Also use passport.session() middleware, to support
   // persistent login sessions (recommended).
   app.use(passport.initialize());
