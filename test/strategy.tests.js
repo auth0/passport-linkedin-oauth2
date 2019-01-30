@@ -29,7 +29,6 @@ describe.only('LinkedIn Strategy', function () {
         'industry,'+
         'distance,'+
         'relation-to-viewer:(distance,connections),'+
-        'current-share,'+
         'num-connections,'+
         'num-connections-capped,'+
         'summary,'+
@@ -66,7 +65,6 @@ describe.only('LinkedIn Strategy', function () {
       'industry,'+
       'distance,'+
       'relation-to-viewer:(distance,connections),'+
-      'current-share,'+
       'num-connections,'+
       'num-connections-capped,'+
       'summary,'+
@@ -105,7 +103,6 @@ describe.only('LinkedIn Strategy', function () {
       'industry,'+
       'distance,'+
       'relation-to-viewer:(distance,connections),'+
-      'current-share,'+
       'num-connections,'+
       'num-connections-capped,'+
       'summary,'+
@@ -172,7 +169,6 @@ describe.only('LinkedIn Strategy', function () {
           'industry,'+
           'distance,'+
           'relation-to-viewer:(distance,connections),'+
-          'current-share,'+
           'num-connections,'+
           'num-connections-capped,'+
           'summary,'+
