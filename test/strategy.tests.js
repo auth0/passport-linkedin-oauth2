@@ -9,7 +9,7 @@ nock.disableNetConnect();
 describe('LinkedIn Strategy', function () {
   const origin = 'https://api.linkedin.com';
 
-  const liteProfilePath = '/v2/me?projection=(id%2CfirstName%2ClastName%2CmaidenName%2CprofilePicture(displayImage~%3AplayableStreams))&oauth2_access_token=whatever';
+  const liteProfilePath = '/v2/me?oauth2_access_token=whatever';
 
   const emailPath = '/v2/emailAddress?q=members&projection=(elements*(handle~))&oauth2_access_token=whatever';
 
@@ -24,7 +24,7 @@ describe('LinkedIn Strategy', function () {
 
     st.name.should.eql("linkedin");
 
-    const decodedProfilePath = decodeURIComponent(liteProfilePath).replace('&oauth2_access_token=whatever', '');
+    const decodedProfilePath = decodeURIComponent(liteProfilePath).replace('?oauth2_access_token=whatever', '');
     const decodedEmailPath = decodeURIComponent(emailPath).replace('&oauth2_access_token=whatever', '');
 
     st.profileUrl.should.eql(`${origin}${decodedProfilePath}`);
