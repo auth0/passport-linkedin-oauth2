@@ -83,7 +83,7 @@ describe('LinkedIn Strategy', function () {
     context('when error occurs', function () {
       before(function () {
         nock('https://api.linkedin.com')
-          .get('/v2/.*')
+          .get(/v2\/.*/)
           .reply(500)
       });
 
