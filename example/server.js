@@ -4,8 +4,9 @@ var express = require('express')
 
 // API Access link for creating client ID and secret:
 // https://www.linkedin.com/secure/developer
-var LINKEDIN_CLIENT_ID = "50p3e3wo29te";
-var LINKEDIN_CLIENT_SECRET = "CUFBLLzfpU24oQ3B";
+var LINKEDIN_CLIENT_ID = process.env.LINKEDIN_CLIENT_ID;
+var LINKEDIN_CLIENT_SECRET = process.env.LINKEDIN_CLIENT_SECRET;
+var CALLBACK_URL = process.env.CALLBACK_URL || 'http://localhost:3000/auth/linkedin/callback';
 
 
 // Passport session setup.
@@ -31,8 +32,8 @@ passport.deserializeUser(function(obj, done) {
 passport.use(new LinkedinStrategy({
     clientID:     LINKEDIN_CLIENT_ID,
     clientSecret: LINKEDIN_CLIENT_SECRET,
-    callbackURL:  "http://localhost:3000/auth/linkedin/callback",
-    scope:        [ 'r_basicprofile', 'r_emailaddress'],
+    callbackURL:  CALLBACK_URL,
+    scope:        ['r_liteprofile', 'r_emailaddress'],
     passReqToCallback: true
   },
   function(req, accessToken, refreshToken, profile, done) {
@@ -54,21 +55,19 @@ passport.use(new LinkedinStrategy({
 var app = express();
 
 // configure Express
-app.configure(function() {
-  app.set('views', __dirname + '/views');
-  app.set('view engine', 'ejs');
-  app.use(express.logger());
-  app.use(express.cookieParser());
-  app.use(express.urlencoded());
-  app.use(express.json());
-  app.use(express.session({ secret: 'keyboard cat' }));
-  // Initialize Passport!  Also use passport.session() middleware, to support
-  // persistent login sessions (recommended).
-  app.use(passport.initialize());
-  app.use(passport.session());
-  app.use(app.router);
-  app.use(express.static(__dirname + '/public'));
-});
+app.set('views', __dirname + '/views');
+app.set('view engine', 'ejs');
+app.use(express.logger());
+app.use(express.cookieParser());
+app.use(express.urlencoded());
+app.use(express.json());
+app.use(express.session({ secret: 'keyboard cat' }));
+// Initialize Passport!  Also use passport.session() middleware, to support
+// persistent login sessions (recommended).
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(app.router);
+app.use(express.static(__dirname + '/public'));
 
 
 app.get('/', function(req, res){
