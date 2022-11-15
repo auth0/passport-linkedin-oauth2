@@ -34,7 +34,7 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "passport-oauth2": "1.x.x"
+    "passport-oauth2": "1.6.1"
   },
   "directories": {
     "example": "example",
