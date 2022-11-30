@@ -2,13 +2,15 @@ A simple [Passport](http://passportjs.org/) strategy for LinkedIn OAuth2 that wo
 
 ## Install
 
-  npm install passport-linkedin-oauth2
+```sh
+npm install passport-linkedin-oauth2
+```
 
 ## Usage
 
 Register the strategy
 
-~~~javascript
+```javascript
 var LinkedInStrategy = require('passport-linkedin-oauth2').Strategy;
 
 passport.use(new LinkedInStrategy({
@@ -26,27 +28,27 @@ passport.use(new LinkedInStrategy({
     return done(null, profile);
   });
 }));
-~~~
+```
 
 and then authenticate as:
 
-~~~javascript
+```javascript
 app.get('/auth/linkedin',
   passport.authenticate('linkedin', { state: 'SOME STATE'  }),
   function(req, res){
     // The request will be redirected to LinkedIn for authentication, so this
     // function will not be called.
   });
-~~~
+```
 
 the login callback:
 
-~~~javascript
+```javascript
 app.get('/auth/linkedin/callback', passport.authenticate('linkedin', {
   successRedirect: '/',
   failureRedirect: '/login'
 }));
-~~~
+```
 
 See [this](https://docs.microsoft.com/en-us/linkedin/consumer/integrations/self-serve/sign-in-with-linkedin?context=linkedin/consumer/context?trk=eml_mktg_gco_dev_api_comms) for details on LinkedIn API.
 
@@ -54,7 +56,7 @@ See [this](https://docs.microsoft.com/en-us/linkedin/consumer/integrations/self-
 
 The `state` param is used to prevent CSRF attacks, and is [required by the LinkedIn API](https://developer.linkedin.com/documents/authentication). You can ask Passport to handle the sending and validating of the `state` parameter by passing `state: true` as an option to the strategy:
 
-~~~javascript
+```javascript
 var LinkedInStrategy = require('passport-linkedin-oauth2').Strategy;
 
 passport.use(new LinkedInStrategy({
@@ -73,7 +75,7 @@ passport.use(new LinkedInStrategy({
     return done(null, profile);
   });
 }));
-~~~
+```
 
 and then authenticate as:
 
