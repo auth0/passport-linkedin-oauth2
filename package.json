@@ -15,7 +15,7 @@
     "express": "^3.x.x",
     "mocha": "*",
     "morgan": "^1.9.1",
-    "nock": "^10.0.5",
+    "nock": "^13.3.1",
     "passport": "^0.4.0",
     "should": "^13.2.3"
   },
@@ -34,11 +34,14 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "passport-oauth2": "1.x.x"
+    "passport-oauth2": "^1.7.0"
   },
   "directories": {
     "example": "example",
     "lib": "lib",
     "test": "test"
+  },
+  "engines": {
+    "node": ">= 16"
   }
 }
