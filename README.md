@@ -2,89 +2,106 @@ A simple [Passport](http://passportjs.org/) strategy for LinkedIn OAuth2 that wo
 
 ## Install
 
-  npm install passport-linkedin-oauth2
+npm install passport-linkedin-oauth2
 
 ## Usage
 
 Register the strategy
 
-~~~javascript
+```javascript
 var LinkedInStrategy = require('passport-linkedin-oauth2').Strategy;
 
-passport.use(new LinkedInStrategy({
-  clientID: LINKEDIN_KEY,
-  clientSecret: LINKEDIN_SECRET,
-  callbackURL: "http://127.0.0.1:3000/auth/linkedin/callback",
-  scope: ['r_emailaddress', 'r_liteprofile'],
-}, function(accessToken, refreshToken, profile, done) {
-  // asynchronous verification, for effect...
-  process.nextTick(function () {
-    // To keep the example simple, the user's LinkedIn profile is returned to
-    // represent the logged-in user. In a typical application, you would want
-    // to associate the LinkedIn account with a user record in your database,
-    // and return that user instead.
-    return done(null, profile);
-  });
-}));
-~~~
+passport.use(
+  new LinkedInStrategy(
+    {
+      clientID: LINKEDIN_KEY,
+      clientSecret: LINKEDIN_SECRET,
+      callbackURL: 'http://127.0.0.1:3000/auth/linkedin/callback',
+      scope: ['email', 'profile', 'openid'],
+    },
+    function (accessToken, refreshToken, profile, done) {
+      // asynchronous verification, for effect...
+      process.nextTick(function () {
+        // To keep the example simple, the user's LinkedIn profile is returned to
+        // represent the logged-in user. In a typical application, you would want
+        // to associate the LinkedIn account with a user record in your database,
+        // and return that user instead.
+        return done(null, profile);
+      });
+    }
+  )
+);
+```
 
 and then authenticate as:
 
-~~~javascript
-app.get('/auth/linkedin',
-  passport.authenticate('linkedin', { state: 'SOME STATE'  }),
-  function(req, res){
+```javascript
+app.get(
+  '/auth/linkedin',
+  passport.authenticate('linkedin', { state: 'SOME STATE' }),
+  function (req, res) {
     // The request will be redirected to LinkedIn for authentication, so this
     // function will not be called.
-  });
-~~~
+  }
+);
+```
 
 the login callback:
 
-~~~javascript
-app.get('/auth/linkedin/callback', passport.authenticate('linkedin', {
-  successRedirect: '/',
-  failureRedirect: '/login'
-}));
-~~~
+```javascript
+app.get(
+  '/auth/linkedin/callback',
+  passport.authenticate('linkedin', {
+    successRedirect: '/',
+    failureRedirect: '/login',
+  })
+);
+```
 
-See [this](https://docs.microsoft.com/en-us/linkedin/consumer/integrations/self-serve/sign-in-with-linkedin?context=linkedin/consumer/context?trk=eml_mktg_gco_dev_api_comms) for details on LinkedIn API.
+See [this](https://learn.microsoft.com/en-us/linkedin/consumer/integrations/self-serve/sign-in-with-linkedin-v2) for details on LinkedIn API.
 
 ## Auto-handle `state` param
 
 The `state` param is used to prevent CSRF attacks, and is [required by the LinkedIn API](https://developer.linkedin.com/documents/authentication). You can ask Passport to handle the sending and validating of the `state` parameter by passing `state: true` as an option to the strategy:
 
-~~~javascript
+```javascript
 var LinkedInStrategy = require('passport-linkedin-oauth2').Strategy;
 
-passport.use(new LinkedInStrategy({
-  clientID: LINKEDIN_KEY,
-  clientSecret: LINKEDIN_SECRET,
-  callbackURL: "http://127.0.0.1:3000/auth/linkedin/callback",
-  scope: ['r_emailaddress', 'r_liteprofile'],
-  state: true
-}, function(accessToken, refreshToken, profile, done) {
-  // asynchronous verification, for effect...
-  process.nextTick(function () {
-    // To keep the example simple, the user's LinkedIn profile is returned to
-    // represent the logged-in user. In a typical application, you would want
-    // to associate the LinkedIn account with a user record in your database,
-    // and return that user instead.
-    return done(null, profile);
-  });
-}));
-~~~
+passport.use(
+  new LinkedInStrategy(
+    {
+      clientID: LINKEDIN_KEY,
+      clientSecret: LINKEDIN_SECRET,
+      callbackURL: 'http://127.0.0.1:3000/auth/linkedin/callback',
+      scope: ['email', 'profile', 'openid'],
+      state: true,
+    },
+    function (accessToken, refreshToken, profile, done) {
+      // asynchronous verification, for effect...
+      process.nextTick(function () {
+        // To keep the example simple, the user's LinkedIn profile is returned to
+        // represent the logged-in user. In a typical application, you would want
+        // to associate the LinkedIn account with a user record in your database,
+        // and return that user instead.
+        return done(null, profile);
+      });
+    }
+  )
+);
+```
 
 and then authenticate as:
 
-~~~javascript
-app.get('/auth/linkedin',
+```javascript
+app.get(
+  '/auth/linkedin',
   passport.authenticate('linkedin'),
-  function(req, res){
+  function (req, res) {
     // The request will be redirected to LinkedIn for authentication, so this
     // function will not be called.
-  });
-~~~
+  }
+);
+```
 
 ## Issue Reporting
 
