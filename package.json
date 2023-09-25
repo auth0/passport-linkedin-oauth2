@@ -1,6 +1,6 @@
 {
   "name": "passport-linkedin-oauth2",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Passport for LinkedIn OAuth2 API v2",
   "main": "./lib",
   "repository": {
@@ -30,7 +30,8 @@
     "Joshua Schell <jschell12@gmail.com>",
     "Jose Romaniello <jfromaniello@gmail.com>",
     "Tom Spencer <fiznool@gmail.com>",
-    "Sokratis Vidros <sokratis.vidros@gmail.com>"
+    "Sokratis Vidros <sokratis.vidros@gmail.com>",
+    "Marat Zimnurov <zimtir@mail.ru>"
   ],
   "license": "MIT",
   "dependencies": {
